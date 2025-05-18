@@ -1,34 +1,48 @@
 import os
 import random
+import logging
 from telegram import Bot, InputMediaPhoto
 from telegram.error import TelegramError
 from src.core.audiobookshelf import AudiobookshelfAPI
 from src.config.config import Config
 
+logger = logging.getLogger("AudiobookshelfBot.telegram")
+
 class TelegramBot:
     def __init__(self):
         self.bot = Bot(token=Config.TELEGRAM_BOT_TOKEN)
         self.chat_id = Config.TELEGRAM_CHAT_ID
+        logger.info("Bot de Telegram inicializado")
 
     async def send_book_of_the_day(self):
-        api = AudiobookshelfAPI()
-        libraries = api.get_libraries()
-        if not libraries:
-            return "❌ No se encontraron bibliotecas."
-
-        books = api.get_all_books(libraries[0]["id"])
-        if not books:
-            return "❌ No se encontraron libros."
-        
-        random_book = random.choice(books)
-        
-        book_details = api.get_book_details(random_book["id"])
-        if not book_details:
-            return "❌ No se pudieron obtener los detalles del libro."
-
-        formatted = api.format_book_message(book_details)
-        
         try:
+            api = AudiobookshelfAPI()
+            libraries = api.get_libraries()
+            if not libraries:
+                msg = "❌ No se encontraron bibliotecas."
+                logger.warning(msg)
+                return msg
+
+            books = api.get_all_books(libraries[0]["id"])
+            if not books:
+                msg = "❌ No se encontraron libros."
+                logger.warning(msg)
+                return msg
+
+            book = random.choice(books)
+            logger.debug(f"Libro seleccionado: ID={book['id']}")
+
+            book_details = api.get_book_details(book["id"])
+            if not book_details:
+                msg = "❌ No se pudieron obtener los detalles del libro."
+                logger.error(msg)
+                return msg
+            
+            title = book_details.get("media", {}).get("metadata", {}).get("title", "Título desconocido")
+            logger.info(f"Preparando envío del libro: '{title}' (ID: {book['id']})")
+            
+            formatted = api.format_book_message(book_details)
+
             if formatted["cover_url"]:
                 await self.bot.send_photo(
                     chat_id=self.chat_id,
@@ -42,6 +56,8 @@ class TelegramBot:
                     text=formatted["message"],
                     parse_mode="Markdown"
                 )
-            return f"✅ Libro enviado con éxito: {formatted['title']}"
+            return "✅ Libro enviado con éxito!"
+
         except Exception as e:
+            logger.critical(f"Error crítico al enviar libro: {e}", exc_info=True)
             return f"❌ Error al enviar: {e}"
