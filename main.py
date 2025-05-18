@@ -1,14 +1,19 @@
 import asyncio
 from src.bot import BookScheduler
+from src.config import setup_logging
+
+logger = setup_logging()
 
 async def main():
+    logger.info("Iniciando aplicación...")
+
     scheduler = BookScheduler()
     scheduler.start()
     
-    # Mantén el script en ejecución
     try:
         while True:
-            await asyncio.sleep(3600)  # Evita que el script termine
+            await asyncio.sleep(3600)
+    
     except KeyboardInterrupt:
         scheduler.shutdown()
 
