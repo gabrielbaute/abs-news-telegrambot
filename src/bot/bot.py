@@ -16,13 +16,13 @@ class TelegramBot:
         if not libraries:
             return "❌ No se encontraron bibliotecas."
 
-        books = api.get_all_books(libraries[0]["id"])  # Ajusta el límite
+        books = api.get_all_books(libraries[0]["id"])
         if not books:
             return "❌ No se encontraron libros."
         
         random_book = random.choice(books)
         
-        book_details = api.get_book_details(random_book["id"])  # Primer libro (luego lo haremos aleatorio)
+        book_details = api.get_book_details(random_book["id"])
         if not book_details:
             return "❌ No se pudieron obtener los detalles del libro."
 
@@ -42,6 +42,6 @@ class TelegramBot:
                     text=formatted["message"],
                     parse_mode="Markdown"
                 )
-            return "✅ Libro enviado con éxito!"
-        except TelegramError as e:
+            return f"✅ Libro enviado con éxito: {formatted['title']}"
+        except Exception as e:
             return f"❌ Error al enviar: {e}"
