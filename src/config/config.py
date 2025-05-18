@@ -12,6 +12,9 @@ class Config:
     USERNAME = os.getenv('USERNAME')
     API_KEY= os.getenv('API_KEY')
 
+    """Logging configuration."""
+    LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+
     """Telegram Bot configuration."""
     TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
     TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
