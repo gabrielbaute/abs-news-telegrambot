@@ -126,12 +126,3 @@ Ejemplo de entrada de log:
 ## 📄 Licencia
 
 MIT License - Copyright (c) 2025 [Gabriel Bauute]
-
----
-
-💡 **Tip**: Para una instalación en producción, considera usar:
-- Secrets de Docker para variables sensibles
-- Sistema de monitorización como Prometheus+Grafana
-- Backup regular del volumen de logs
-
-¿Preguntas? ¡Abre un issue o contáctame directamente!
