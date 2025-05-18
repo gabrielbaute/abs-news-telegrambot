@@ -32,6 +32,14 @@ class AudiobookshelfAPI:
             narrator = "Narrador desconocido"
         
         return narrator
+    
+    def _get_description(self, metadata):
+        description = metadata.get("description")
+        formatted_description = "Sin descripción disponible."
+        if description:
+            formatted_description = f"{description[:500]}..." if len(description) > 500 else description
+        
+        return formatted_description
 
     def get_libraries(self):
         """Obtiene la lista de bibliotecas disponibles."""
@@ -89,7 +97,7 @@ class AudiobookshelfAPI:
         title = metadata.get("title", "Título desconocido")
         author = self._get_authors(metadata)
         narrator = self._get_narrators(metadata)
-        description = metadata.get("description", "Sin descripción disponible.")
+        description = self._get_description(metadata)
         genres = ", ".join(metadata.get("genres", [])) or "No especificado"
         language = metadata.get("language", "Idioma desconocido")
         cover_url = f"{self.server_url}/api/items/{book_details['id']}/cover" if book_details.get('id') else None
