@@ -10,9 +10,19 @@ services:
     security_opt:
       - no-new-privileges:true
     env_file: .env
+    environment:
+      - LOG_UID=1000
+      - LOG_GID=1000
     volumes:
-      - logs:/app/logs
+      - ./logs:/app/logs:rw
+    networks:
+      - abs-bot
 
 volumes:
   logs:
     driver: local
+
+networks:
+  abs-bot:
+    name: abs-bot
+    driver: bridge

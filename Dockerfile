@@ -24,9 +24,12 @@ RUN pip install --upgrade pip && \
 COPY src/ ./src/
 COPY main.py .
 
-# 4. Crea usuario no-root
-RUN useradd -r -s /bin/false appuser && \
-    chown -R appuser:appuser /app
+# 4. Crea directorio de logs con permisos
+RUN mkdir -p /app/logs && \
+    chown appuser:appuser /app/logs && \
+    chmod 755 /app/logs
+
+# 5. Cambio a usuario no-root
 USER appuser
 
 CMD ["python", "main.py"]
