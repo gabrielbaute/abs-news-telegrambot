@@ -1,5 +1,4 @@
-# Usa la última imagen estable de Python 3.12 (o 3.13 si prefieres)
-FROM python:3.13-rc-slim-bookworm 
+FROM python:3.13-rc-slim-bookworm
 
 # Configuración de entorno seguro
 ENV PYTHONUNBUFFERED=1 \
@@ -9,27 +8,29 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-# 1. Instala dependencias del sistema solo las esenciales
+# 1. Instala dependencias del sistema
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl3 \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# 2. Copia e instala dependencias Python primero (para cache eficiente)
+# 2. Crea usuario y directorio de logs ANTES de cambiar de usuario
+RUN groupadd -r appuser -g 1000 && \
+    useradd -r -u 1000 -g appuser appuser && \
+    mkdir -p /app/logs && \
+    chown appuser:appuser /app/logs && \
+    chmod 755 /app/logs
+
+# 3. Instala dependencias Python
 COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt --no-cache-dir
 
-# 3. Copia el resto del código
+# 4. Copia el código
 COPY src/ ./src/
 COPY main.py .
 
-# 4. Crea directorio de logs con permisos
-RUN mkdir -p /app/logs && \
-    chown appuser:appuser /app/logs && \
-    chmod 755 /app/logs
-
-# 5. Cambio a usuario no-root
+# 5. Cambia al usuario no-root
 USER appuser
 
 CMD ["python", "main.py"]

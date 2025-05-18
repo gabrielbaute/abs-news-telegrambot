@@ -52,7 +52,12 @@ TZ=America/Caracas
 ```
 
 ## 🐳 Despliegue con Docker
-
+Primero que nada, asegúrate de crear el directorio para los logs y darle permisos:
+```bash
+mkdir -p logs
+sudo chown -R 1000:1000 logs
+```
+Luego, procede a construir la imagen y levantar el contenedor:
 ```bash
 # Construir la imagen
 docker-compose build
