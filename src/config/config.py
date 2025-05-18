@@ -15,3 +15,7 @@ class Config:
     """Telegram Bot configuration."""
     TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
     TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+
+    """Scheduler configuration."""
+    SCHEDULER_TIME_HOUR = os.getenv('SCHEDULER_TIME_HOUR', '14')
+    SCHEDULER_TIME_MINUTE = os.getenv('SCHEDULER_TIME_MINUTE', '54')
