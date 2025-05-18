@@ -22,3 +22,4 @@ class Config:
     """Scheduler configuration."""
     SCHEDULER_TIME_HOUR = os.getenv('SCHEDULER_TIME_HOUR', '14')
     SCHEDULER_TIME_MINUTE = os.getenv('SCHEDULER_TIME_MINUTE', '54')
+    TZ = os.getenv('TZ', 'America/Caracas')
