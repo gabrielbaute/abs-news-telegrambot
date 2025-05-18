@@ -1,5 +1,5 @@
-# Usa imagen con parches de seguridad
-FROM python:3.12.0-slim-bookworm@sha256:8d10c926a382c8b7c87b6ff4b5d6e60a24a1b8c7b9e1a3e0e3a3e8e8b8e8b8e8
+# Build stage
+FROM python:3.13-slim-bookworm as builder
 
 WORKDIR /app
 
