@@ -28,7 +28,3 @@ class Config:
     """Database configuration."""
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///src/instance/absbot.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS', False)
-    DB_ENGINE_OPTIONS = {
-        'poolclass': NullPool,
-        'connect_args': {'check_same_thread': False} if 'sqlite' in SQLALCHEMY_DATABASE_URI else {}
-    }
