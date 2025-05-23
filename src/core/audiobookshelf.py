@@ -111,7 +111,10 @@ class AudiobookshelfAPI:
             f"-> ⏳ *Duración:* {duration}\n"
             f"-> 🌍 *Idioma:* {language}\n"
             f"-> 🏷️ *Géneros:* {genres}\n\n"
-            f"📖 *Sinopsis:* {description[:500]}..."
+            f"📖 *Sinopsis:* {description[:500]}...\n\n"
+
+            "No olvides unirte al servidor de Audiobookshelf para más audiolibros:\n"
+            "https://audiobook.enlaesquinadelsaman.online\n\n"
         )
         
         return {
