@@ -3,8 +3,10 @@ import random
 import logging
 from telegram import Bot, InputMediaPhoto
 from telegram.error import TelegramError
-from src.core.audiobookshelf import AudiobookshelfAPI
-from src.config.config import Config
+
+from src.core import AudiobookshelfAPI
+from src.config import Config
+from src.database import add_sent_book, was_book_sent
 
 logger = logging.getLogger("AudiobookshelfBot.telegram")
 
@@ -28,6 +30,13 @@ class TelegramBot:
                 msg = "❌ No se encontraron libros."
                 logger.warning(msg)
                 return msg
+
+            # Filtro para no repetir
+            unsent_books = [b for b in books if not was_book_sent(b["id"])]
+            
+            if not unsent_books:
+                logger.warning("No hay libros no enviados disponibles")
+                return "❌ Todos los libros ya fueron compartidos."
 
             book = random.choice(books)
             logger.debug(f"Libro seleccionado: ID={book['id']}")
@@ -56,8 +65,11 @@ class TelegramBot:
                     text=formatted["message"],
                     parse_mode="Markdown"
                 )
-            return "✅ Libro enviado con éxito!"
 
+            add_sent_book(book_details)
+
+            return "✅ Libro enviado con éxito!"
+        
         except Exception as e:
-            logger.critical(f"Error crítico al enviar libro: {e}", exc_info=True)
-            return f"❌ Error al enviar: {e}"
+            logger.critical(f"Error crítico al enviar mensaje a Telegram: {e}", exc_info=True)
+            return f"❌ Error al enviar a Telegram: {e}"
